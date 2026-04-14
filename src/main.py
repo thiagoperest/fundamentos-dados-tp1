@@ -1,5 +1,97 @@
+from datetime import date
+
+
+tasks = [
+    {
+        "id": 1,
+        "description": "Estudar Python",
+        "created_at": date(2026, 4, 1),
+        "status": "pendente",
+        "deadline": date(2026, 4, 30),
+        "urgency": "alta",
+    },
+    {
+        "id": 2,
+        "description": "Aprender inglês",
+        "created_at": date(2026, 4, 5),
+        "status": "pendente",
+        "deadline": date(2026, 12, 31),
+        "urgency": "normal",
+    },
+    {
+        "id": 3,
+        "description": "Assistir workshops sobre arquitetura de software",
+        "created_at": date(2026, 4, 10),
+        "status": "pendente",
+        "deadline": date(2026, 5, 31),
+        "urgency": "normal",
+    },
+]
+
+
+def add_task(description, deadline=None, urgency="normal"):
+    """
+    Adiciona uma nova tarefa à lista de tarefas pendentes.
+
+    Args:
+        description (str): Descrição da tarefa.
+        deadline (date, optional): Prazo final da tarefa. Padrão: None.
+        urgency (str, optional): Nível de urgência da tarefa ("baixa", "normal", "alta"). Padrão: "normal".
+
+    """
+    next_id = max(task["id"] for task in tasks) + 1 if tasks else 1
+    task = {
+        "id": next_id,
+        "description": description,
+        "created_at": date.today(),
+        "status": "pendente",
+        "deadline": deadline,
+        "urgency": urgency,
+    }
+    tasks.append(task)
+    print(f"\nTarefa #{task['id']} adicionada com sucesso.")
+    return task
+
+
 def main():
-    print("Hello, World!")
+    while True:
+        print("\n=== Sistema de Gestão de Tarefas ===")
+        print("1 - Adicionar Tarefa")
+        print("0 - Sair")
+
+        option = input("\nEscolha uma opção: ").strip()
+
+        if option == "1":
+            description = ""
+            while not description:
+                description = input("Descrição da tarefa (obrigatório): ").strip()
+                if not description:
+                    print("A descrição não pode ser vazia.")
+            deadline = None
+            while not deadline:
+                deadline_input = input("Prazo final (DD/MM/AAAA) (obrigatório): ").strip()
+                if not deadline_input:
+                    print("O prazo final não pode ser vazio.")
+                else:
+                    try:
+                        day, month, year = deadline_input.split("/")
+                        parsed = date(int(year), int(month), int(day))
+                        if parsed < date.today():
+                            print("O prazo final não pode ser uma data anterior a hoje!")
+                        else:
+                            deadline = parsed
+                    except (ValueError, TypeError):
+                        print("Formato inválido. Use DD/MM/AAAA (ex: 30/04/2026).")
+            urgency = input("Urgência (baixa/normal/alta) [padrão: normal]: ").strip() or "normal"
+
+            add_task(description, deadline=deadline, urgency=urgency)
+
+        elif option == "0":
+            print("Encerrando o programa.")
+            break
+
+        else:
+            print("Opção inválida. Tente novamente.")
 
 
 if __name__ == "__main__":
