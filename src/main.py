@@ -104,12 +104,32 @@ def complete_task(task_id, status="concluída"):
     return None
 
 
+def remove_task(task_id):
+    """
+    Remove uma tarefa da lista pelo seu ID.
+
+    Args:
+        task_id (int): ID da tarefa a ser removida.
+
+    Returns:
+        dict | None: A tarefa removida, ou None se não encontrada.
+    """
+    for task in tasks:
+        if task["id"] == task_id:
+            tasks.remove(task)
+            print(f"\nTarefa #{task_id} removida com sucesso.")
+            return task
+    print(f"\nTarefa #{task_id} não encontrada.")
+    return None
+
+
 def main():
     while True:
         print("\n=== Sistema de Gestão de Tarefas ===")
         print("1 - Adicionar Tarefa")
         print("2 - Listar Tarefas")
         print("3 - Marcar Tarefa como Concluída")
+        print("4 - Remover Tarefa")
         print("0 - Sair")
 
         option = input("\nEscolha uma opção: ").strip()
@@ -154,6 +174,18 @@ def main():
                         print("ID inválido. Digite um número.")
                         task_id = None
                 complete_task(task_id)
+
+        elif option == "4":
+            list_tasks()
+            if tasks:
+                task_id = None
+                while task_id is None:
+                    try:
+                        task_id = int(input("\nDigite o ID da tarefa a remover: ").strip())
+                    except ValueError:
+                        print("ID inválido. Digite um número.")
+                        task_id = None
+                remove_task(task_id)
 
         elif option == "0":
             print("Encerrando o programa.")
