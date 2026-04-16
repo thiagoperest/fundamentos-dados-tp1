@@ -84,11 +84,32 @@ def list_tasks(tasks_list=None):
     return len(pending)
 
 
+def complete_task(task_id, status="concluída"):
+    """
+    Marca uma tarefa específica como concluída.
+
+    Args:
+        task_id (int): ID da tarefa a ser marcada como concluída.
+        status (str, optional): Status a ser atribuído à tarefa. Padrão: "concluída".
+
+    Returns:
+        dict | None: A tarefa atualizada, ou None se não encontrada.
+    """
+    for task in tasks:
+        if task["id"] == task_id:
+            task["status"] = status
+            print(f"\nTarefa #{task_id} marcada como '{status}' com sucesso.")
+            return task
+    print(f"\nTarefa #{task_id} não encontrada.")
+    return None
+
+
 def main():
     while True:
         print("\n=== Sistema de Gestão de Tarefas ===")
         print("1 - Adicionar Tarefa")
         print("2 - Listar Tarefas")
+        print("3 - Marcar Tarefa como Concluída")
         print("0 - Sair")
 
         option = input("\nEscolha uma opção: ").strip()
@@ -120,6 +141,19 @@ def main():
 
         elif option == "2":
             list_tasks()
+
+        elif option == "3":
+            list_tasks()
+            pending = [task for task in tasks if task["status"] == "pendente"]
+            if pending:
+                task_id = None
+                while task_id is None:
+                    try:
+                        task_id = int(input("\nDigite o ID da tarefa a concluir: ").strip())
+                    except ValueError:
+                        print("ID inválido. Digite um número.")
+                        task_id = None
+                complete_task(task_id)
 
         elif option == "0":
             print("Encerrando o programa.")
