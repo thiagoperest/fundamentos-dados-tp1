@@ -53,10 +53,42 @@ def add_task(description, deadline=None, urgency="normal"):
     return task
 
 
+def list_tasks(tasks_list=None):
+    """
+    Lista todas as tarefas pendentes, enumerando-as.
+
+    Args:
+        tasks_list (list, optional): Lista de tarefas a exibir. Padrão: lista total de tasks.
+
+    Returns:
+        int: Quantidade de tarefas pendentes exibidas.
+    """
+    if tasks_list is None:
+        tasks_list = tasks
+
+    pending = [task for task in tasks_list if task["status"] == "pendente"]
+
+    if not pending:
+        print("\nNenhuma tarefa pendente encontrada.")
+        return 0
+
+    print("\n=== Tarefas Pendentes ===")
+    for i, task in enumerate(pending, start=1):
+        deadline_str = task["deadline"].strftime("%d/%m/%Y") if task["deadline"] else "Sem prazo"
+        print(f"\n{i}. [ID #{task['id']}] {task['description']}")
+        print(f"   Criado em : {task['created_at'].strftime('%d/%m/%Y')}")
+        print(f"   Prazo     : {deadline_str}")
+        print(f"   Urgência  : {task['urgency']}")
+        print(f"   Status    : {task['status']}")
+
+    return len(pending)
+
+
 def main():
     while True:
         print("\n=== Sistema de Gestão de Tarefas ===")
         print("1 - Adicionar Tarefa")
+        print("2 - Listar Tarefas")
         print("0 - Sair")
 
         option = input("\nEscolha uma opção: ").strip()
@@ -85,6 +117,9 @@ def main():
             urgency = input("Urgência (baixa/normal/alta) [padrão: normal]: ").strip() or "normal"
 
             add_task(description, deadline=deadline, urgency=urgency)
+
+        elif option == "2":
+            list_tasks()
 
         elif option == "0":
             print("Encerrando o programa.")
